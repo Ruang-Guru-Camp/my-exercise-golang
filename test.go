@@ -2,24 +2,63 @@ package main
 
 import (
 	"fmt"
+	"strconv"
+	"strings"
 )
 
 func main() {
-	value1 := []int{172, 170, 150, 165, 144, 155, 159}
-	fmt.Println(Sortheight(value1))
+	var sampel = map[string]string{"hello": "world", "John": "Doe", "age": "14"}
+	MapToSlice(sampel)
 }
 
-func Sortheight(height []int) []int {
-	sortedHeight := make([]int, len(height))
-	copy(sortedHeight, height)
-
-	for i := 0; i < len(sortedHeight)-1; i++ {
-		for j := 0; j < len(sortedHeight)-i-1; j++ {
-			if sortedHeight[j] > sortedHeight[j+1] {
-				sortedHeight[j], sortedHeight[j+1] = sortedHeight[j+1], sortedHeight[j]
-			}
-		}
+func MapToSlice(mapData map[string]string) [][]string {
+	var result [][]string
+	for key, value := range mapData {
+		var temp []string
+		temp = append(temp, key)
+		temp = append(temp, value)
+		result = append(result, temp)
 	}
-
-	return sortedHeight
+	fmt.Println(result)
+	return result // TODO: replace this
 }
+
+func DeliveryOrder(data []string, day string) map[string]float32 {
+	var result = map[string]float32{}
+	for _, resData := range data {
+		parts := strings.Split(resData, ":")
+		name := strings.Join(parts[0:2], "-")
+		price, _ := strconv.Atoi(parts[2])
+		destination := parts[3]
+
+		if day == "senin" || day == "rabu" || day == "jumat" {
+			price = price + (price * 10 / 100)
+		} else if day == "selasa" || day == "kamis" || day == "sabtu" {
+			price = price + (price * 5 / 100)
+		}
+		fmt.Println(name, price)
+
+		if destination == "BDG" && day == "rabu" || day == "kamis" || day == "sabtu" {
+			result[name] = float32(price)
+
+		} else if destination == "BKS" && day == "selasa" || day == "kamis" || day == "jumat" {
+			result[name] = float32(price)
+
+		} else if destination == "DPK" && day == "senin" || day == "selasa" {
+			result[name] = float32(price)
+
+		} else if destination == "JKT" && day != "minggu" {
+			result[name] = float32(price)
+		}
+
+	}
+	return result // TODO: replace this
+}
+
+// func bintang(n int) {
+// 	for i := n; i > 0; i-- {
+// 		fmt.Print(strings.Repeat(" ", n-i))
+// 		fmt.Print(strings.Repeat("*", i))
+// 		fmt.Println("")
+// 	}
+// }
