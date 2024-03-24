@@ -11,10 +11,25 @@ func ChangeOutput(data []string) map[string][]string {
 	result := make(map[string][]string)
 
 	for _, item := range data {
-		parts := strings.Split(item, "-")     // Memisahkan string berdasarkan tanda "-"
-		key := parts[0]                       // Mendapatkan bagian pertama sebagai kunci
-		value := strings.Join(parts[3:], ",") // Menggabungkan bagian ketiga dan seterusnya sebagai nilai
-		result[key] = append(result[key], value)
+		parts := strings.Split(item, "-")
+		key := parts[0]
+		indexVal := parts[1]
+		attribute := parts[2]
+		value := strings.Join(parts[3:], " ")
+
+		// Menggabungkan first dan last name untuk account dan address
+		if attribute == "first" {
+			// Mencari last name yang sesuai
+			for _, otherItem := range data {
+				otherParts := strings.Split(otherItem, "-")
+				fmt.Println(otherParts)
+				if otherParts[0] == key && otherParts[1] == indexVal && otherParts[2] == "last" {
+					value += " " + otherParts[3]
+					break
+				}
+			}
+			result[key] = append(result[key], value)
+		}
 	}
 
 	return result
